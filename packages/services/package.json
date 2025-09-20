@@ -1,0 +1,20 @@
+{
+  "name": "@vanth/services",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "lint": "eslint \"src/**/*.ts\"",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.20.0",
+    "@vanth/shared": "workspace:*",
+    "tslib": "^2.6.3"
+  }
+}

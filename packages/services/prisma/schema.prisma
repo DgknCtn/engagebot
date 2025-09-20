@@ -1,0 +1,154 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Guild {
+  id              String            @id
+  name            String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  members         GuildMember[]
+  rewards         Reward[]
+  roleMultipliers RoleMultiplier[]
+  quests          Quest[]
+}
+
+model GuildMember {
+  id                String              @id @default(cuid())
+  guildId           String
+  userId            String
+  pointsBalance     Int                 @default(0)
+  walletAddress     String?
+  walletLinkedAt    DateTime?
+  walletCooldownEnd DateTime?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  guild             Guild              @relation(fields: [guildId], references: [id])
+  transactions      PointsTransaction[]
+  redemptions       RewardRedemption[]
+  idempotencyKeys   IdempotencyKey[]
+  twitterLink       TwitterLink?
+  walletLink        WalletLink?
+  questProgress     QuestProgress[]
+
+  @@unique([guildId, userId])
+}
+
+model TwitterLink {
+  id             String       @id @default(cuid())
+  guildMemberId  String       @unique
+  accessToken    String
+  refreshToken   String?
+  expiresAt      DateTime?
+  state          String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  guildMember    GuildMember  @relation(fields: [guildMemberId], references: [id])
+}
+
+model WalletLink {
+  id             String       @id @default(cuid())
+  guildMemberId  String       @unique
+  address        String
+  linkedAt       DateTime     @default(now())
+  cooldownEndsAt DateTime?
+  guildMember    GuildMember  @relation(fields: [guildMemberId], references: [id])
+}
+
+model PointsTransaction {
+  id                String       @id @default(cuid())
+  guildMemberId     String
+  actionType        String
+  source            String
+  referenceId       String
+  basePoints        Int
+  multiplierApplied Float        @default(1)
+  totalPoints       Int
+  metadata          Json?
+  occurredAt        DateTime     @default(now())
+  guildMember       GuildMember  @relation(fields: [guildMemberId], references: [id])
+
+  @@unique([guildMemberId, actionType, referenceId])
+  @@index([guildMemberId, occurredAt])
+}
+
+model IdempotencyKey {
+  id            String       @id @default(cuid())
+  guildMemberId String
+  actionType    String
+  referenceId   String
+  transactionId String
+  createdAt     DateTime     @default(now())
+  guildMember   GuildMember  @relation(fields: [guildMemberId], references: [id])
+
+  @@unique([guildMemberId, actionType, referenceId])
+}
+
+model RoleMultiplier {
+  id        String   @id @default(cuid())
+  guildId   String
+  roleId    String
+  multiplier Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  guild     Guild    @relation(fields: [guildId], references: [id])
+
+  @@unique([guildId, roleId])
+}
+
+model Reward {
+  id        String   @id @default(cuid())
+  guildId   String
+  type      String
+  roleId    String?
+  cost      Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  guild     Guild    @relation(fields: [guildId], references: [id])
+  redemptions RewardRedemption[]
+}
+
+model RewardRedemption {
+  id            String        @id @default(cuid())
+  rewardId      String
+  guildMemberId String
+  redeemedAt    DateTime      @default(now())
+  reward        Reward        @relation(fields: [rewardId], references: [id])
+  guildMember   GuildMember   @relation(fields: [guildMemberId], references: [id])
+
+  @@index([guildMemberId, redeemedAt])
+}
+
+model Quest {
+  id          String        @id @default(cuid())
+  guildId     String
+  title       String
+  description String?
+  type        String
+  rewardPoints Int
+  config      Json?
+  startsAt    DateTime?
+  endsAt      DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  guild       Guild         @relation(fields: [guildId], references: [id])
+  progress    QuestProgress[]
+}
+
+model QuestProgress {
+  id            String       @id @default(cuid())
+  questId       String
+  guildMemberId String
+  state         String       @default("pending")
+  progress      Int          @default(0)
+  updatedAt     DateTime     @updatedAt
+  quest         Quest        @relation(fields: [questId], references: [id])
+  guildMember   GuildMember  @relation(fields: [guildMemberId], references: [id])
+
+  @@unique([questId, guildMemberId])
+}

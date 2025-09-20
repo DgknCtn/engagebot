@@ -1,0 +1,52 @@
+---
+alwaysApply: true
+---
+
+# Project Rules (Discord Engagement & On-chain Roles Bot)
+SCOPE: Implement this repository strictly per docs/PRD.md.
+
+TECH:
+- Node.js 20 + TypeScript; discord.js v14; PostgreSQL; Redis; Docker.
+- Follow clean architecture; use ESLint + Prettier; .env for secrets (no secrets in code).
+- Timezone: Europe/Istanbul.
+
+FEATURE GUARDS:
+- Slash commands only (English).
+- Twitter(X) via official OAuth2; ingest likes/retweets/replies; idempotent points.
+- Discord reactions: channel allowlist + per-day caps.
+- Solana wallet: address-only (no signature), daily NFT/Token sync, role mapping.
+- Rewards: role redeem with atomic point deduction.
+- Leaderboard: 24h / 7d / all-time.
+- Anti-cheat: caps, cooldowns, per-tweet limits, wallet change cooldown.
+
+QUALITY:
+- Add unit tests for points engine & awarding idempotency.
+- Log every awarded transaction with source refs (tweet_id/message_id).
+- Use migrations (drizzle or prisma) and seed config.
+
+WHEN UNSURE:
+- Ask me to choose, propose 2–3 crisp options with tradeoffs referencing PRD sections.
+# Project Rules (Discord Engagement & On-chain Roles Bot)
+SCOPE: Implement this repository strictly per docs/PRD.md.
+
+TECH:
+- Node.js 20 + TypeScript; discord.js v14; PostgreSQL; Redis; Docker.
+- Follow clean architecture; use ESLint + Prettier; .env for secrets (no secrets in code).
+- Timezone: Europe/Istanbul.
+
+FEATURE GUARDS:
+- Slash commands only (English).
+- Twitter(X) via official OAuth2; ingest likes/retweets/replies; idempotent points.
+- Discord reactions: channel allowlist + per-day caps.
+- Solana wallet: address-only (no signature), daily NFT/Token sync, role mapping.
+- Rewards: role redeem with atomic point deduction.
+- Leaderboard: 24h / 7d / all-time.
+- Anti-cheat: caps, cooldowns, per-tweet limits, wallet change cooldown.
+
+QUALITY:
+- Add unit tests for points engine & awarding idempotency.
+- Log every awarded transaction with source refs (tweet_id/message_id).
+- Use migrations (drizzle or prisma) and seed config.
+
+WHEN UNSURE:
+- Ask me to choose, propose 2–3 crisp options with tradeoffs referencing PRD sections.
