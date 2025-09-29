@@ -4,6 +4,7 @@ import {
   InMemoryRoleMultiplierService,
   PointsEngine,
   PrismaPointsService,
+  PrismaRoleMultiplierService,
   PrismaWalletService,
   PrismaXIngestor,
   PrismaXOauthHandler,
@@ -17,8 +18,19 @@ import {
 import { logger } from '@vanth/shared';
 
 const idempotencyStore = new InMemoryIdempotencyStore();
-const multiplierService = new InMemoryRoleMultiplierService();
-const pointsService = new PrismaPointsService();
+
+const multiplierService = await (async () => {
+  try {
+    const service = new PrismaRoleMultiplierService();
+    await service.hydrate();
+    return service;
+  } catch (error) {
+    logger.warn('Falling back to in-memory role multiplier service', { error });
+    return new InMemoryRoleMultiplierService();
+  }
+})();
+
+const pointsService = new PrismaPointsService({ roleMultiplierService: multiplierService });
 const pointsEngine = new PointsEngine({
   idempotencyStore,
   multiplierService,
