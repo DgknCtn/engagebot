@@ -2,5 +2,7 @@ export * from './ingestors/x-ingestor.js';
 export * from './oauth/x-oauth-handler.js';
 export * from './points/multipliers.js';
 export * from './points/points-engine.js';
+export * from './points/points-service.js';
 export * from './prisma/client.js';
 export * from './storage/idempotency-store.js';
+export * from './wallets/wallet-service.js';
