@@ -1,9 +1,10 @@
 import { randomUUID } from 'node:crypto';
 
 import { Prisma, PrismaClient } from '@prisma/client';
-import { ActionType, LeaderboardWindow, PointsTransaction, ValidationError } from '@vanth/shared';
+import { ActionType, LeaderboardWindow, PointsTransaction, RoleMultiplier, ValidationError } from '@vanth/shared';
 
 import { getPrismaClient } from '../prisma/client.js';
+import { RoleMultiplierService } from './multipliers.js';
 
 const WINDOW_ORDER: Record<Exclude<LeaderboardWindow, 'all'>, Prisma.SortOrder> = {
   '24h': 'desc',
@@ -116,11 +117,19 @@ export interface PointsService {
   removeReward(params: { guildId: string; rewardId: string }): Promise<boolean>;
 }
 
+interface PrismaPointsServiceOptions {
+  prisma?: PrismaClient;
+  roleMultiplierService?: RoleMultiplierService | null;
+}
+
 export class PrismaPointsService implements PointsService {
   private readonly prisma: PrismaClient;
+  private readonly roleMultiplierService?: RoleMultiplierService | null;
 
-  constructor(prisma: PrismaClient = getPrismaClient()) {
+  constructor(options: PrismaPointsServiceOptions = {}) {
+    const { prisma = getPrismaClient(), roleMultiplierService = null } = options;
     this.prisma = prisma;
+    this.roleMultiplierService = roleMultiplierService;
   }
 
 
@@ -349,6 +358,8 @@ export class PrismaPointsService implements PointsService {
         multiplier,
       },
     });
+
+    await this.refreshRoleMultiplierCache(guildId);
   }
 
   async removeRoleMultiplier({ guildId, roleId }: { guildId: string; roleId: string }): Promise<boolean> {
@@ -361,6 +372,7 @@ export class PrismaPointsService implements PointsService {
           },
         },
       });
+      await this.refreshRoleMultiplierCache(guildId);
       return true;
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
@@ -420,6 +432,24 @@ export class PrismaPointsService implements PointsService {
       cost: reward.cost,
       createdAt: reward.createdAt,
     }));
+  }
+
+  private async refreshRoleMultiplierCache(guildId: string): Promise<void> {
+    if (!this.roleMultiplierService?.setMultipliers) {
+      return;
+    }
+
+    const multipliers = await this.prisma.roleMultiplier.findMany({
+      where: { guildId },
+      orderBy: { multiplier: 'desc' },
+    });
+
+    const formatted: RoleMultiplier[] = multipliers.map((entry) => ({
+      roleId: entry.roleId,
+      multiplier: entry.multiplier,
+    }));
+
+    await this.roleMultiplierService.setMultipliers(guildId, formatted);
   }
 
   async removeReward({ guildId, rewardId }: { guildId: string; rewardId: string }): Promise<boolean> {
