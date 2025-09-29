@@ -72,23 +72,31 @@ export class SolanaHolderSync {
   }
 
   // Placeholder for future integration with a Solana indexer provider.
-  protected async fetchHoldings(_address: string): Promise<unknown> {
+  protected async fetchHoldings(address: string): Promise<unknown> {
     if (!this.indexerApiKey) {
       logger.debug('No Solana indexer API key configured; returning empty holdings');
       return [];
     }
 
     // TODO: Call Solana indexer API with the configured credentials.
+    void address;
     return [];
   }
 
   // Placeholder for applying guild-specific holder rules.
-  protected async applyHolderRules(_params: {
+  protected async applyHolderRules(params: {
     guildId: string;
     userId: string;
     address: string;
     holdings: unknown;
   }): Promise<void> {
     // TODO: Evaluate holdings against configured rules and apply Discord roles.
+    void params;
   }
 }
+
+
+
+
+
+

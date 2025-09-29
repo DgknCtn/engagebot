@@ -7,9 +7,9 @@ import {
   PointsTransaction,
 } from '@vanth/shared';
 
-import type { PointsService } from './points-service.js';
 import { IdempotencyStore } from '../storage/idempotency-store.js';
 import { RoleMultiplierService } from './multipliers.js';
+import type { PointsService } from './points-service.js';
 
 export interface PointsEngineDependencies {
   idempotencyStore: IdempotencyStore;
@@ -69,6 +69,7 @@ export class PointsEngine {
     return 'discord';
   }
 }
+
 
 
 

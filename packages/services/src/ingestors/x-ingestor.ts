@@ -1,8 +1,8 @@
 import { PrismaClient } from '@prisma/client';
 import { AwardPointsPayload } from '@vanth/shared';
 
-import { getPrismaClient } from '../prisma/client.js';
 import { PointsEngine } from '../points/points-engine.js';
+import { getPrismaClient } from '../prisma/client.js';
 
 export interface XInteraction {
   tweetId: string;
@@ -292,3 +292,4 @@ export class PrismaXIngestor implements XIngestor {
     }
   }
 }
+

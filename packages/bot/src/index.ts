@@ -1,4 +1,4 @@
-import 'dotenv/config';
+import './env.js';
 
 import { logger } from '@vanth/shared';
 import { Client, Events, GatewayIntentBits } from 'discord.js';

@@ -1,3 +1,4 @@
+import './env.js';
 import {
   InMemoryIdempotencyStore,
   InMemoryRoleMultiplierService,
@@ -73,3 +74,4 @@ export const getBotContext = (): BotContext => {
 
   return cachedContext;
 };
+

@@ -173,7 +173,7 @@ export const questCommand: BotSlashCommand = {
 
     const lines = quests.map((quest) => {
       const timeframe = formatTimeframe(quest.startsAt, quest.endsAt);
-      return `ID: ${quest.id} › ${quest.title} (${quest.type}) · ${quest.rewardPoints} pts${timeframe ? ` · ${timeframe}` : ''}`;
+      return `ID: ${quest.id} ï¿½ ${quest.title} (${quest.type}) ï¿½ ${quest.rewardPoints} pts${timeframe ? ` ï¿½ ${timeframe}` : ''}`;
     });
 
     await interaction.reply({
