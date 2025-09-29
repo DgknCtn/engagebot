@@ -20,6 +20,7 @@ export interface PointsTransaction {
   multiplierApplied: number;
   totalPoints: number;
   occurredAt: Date;
+  metadata?: Record<string, unknown>;
 }
 
 export interface PointsBalanceSnapshot {
@@ -61,3 +62,5 @@ export interface PointsConfig {
   baseValues: Record<ActionType, number>;
   channelOverrides: Record<string, Partial<Record<ActionType, number>>>;
 }
+
+

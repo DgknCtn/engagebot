@@ -1,7 +1,6 @@
 ---
-alwaysApply: true
+alwaysApply: false
 ---
-
 # Project Rules (Discord Engagement & On-chain Roles Bot)
 SCOPE: Implement this repository strictly per docs/PRD.md.
 

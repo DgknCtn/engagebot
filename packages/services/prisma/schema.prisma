@@ -16,6 +16,7 @@ model Guild {
   rewards         Reward[]
   roleMultipliers RoleMultiplier[]
   quests          Quest[]
+  actionPointConfigs ActionPointConfig[]
 }
 
 model GuildMember {
@@ -42,13 +43,20 @@ model GuildMember {
 model TwitterLink {
   id             String       @id @default(cuid())
   guildMemberId  String       @unique
-  accessToken    String
+  accessToken    String?
   refreshToken   String?
+  tokenType      String?
+  scope          String?
   expiresAt      DateTime?
   state          String?
+  codeVerifier   String?
+  twitterUserId  String?
+  twitterHandle  String?
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
   guildMember    GuildMember  @relation(fields: [guildMemberId], references: [id])
+
+  @@index([state])
 }
 
 model WalletLink {
@@ -60,6 +68,18 @@ model WalletLink {
   guildMember    GuildMember  @relation(fields: [guildMemberId], references: [id])
 }
 
+model ActionPointConfig {
+  id        String   @id @default(cuid())
+  guildId   String
+  actionType String
+  channelId String?
+  value     Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  guild     Guild    @relation(fields: [guildId], references: [id])
+
+  @@unique([guildId, actionType, channelId])
+}
 model PointsTransaction {
   id                String       @id @default(cuid())
   guildMemberId     String
@@ -152,3 +172,7 @@ model QuestProgress {
 
   @@unique([questId, guildMemberId])
 }
+
+
+
+
