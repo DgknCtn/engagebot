@@ -1,8 +1,8 @@
 # Next Steps
 
-1. Configure environment variables by copying `.env.example` to `.env` and filling Discord, X, and database credentials.
-2. Initialize the database with `pnpm db:migrate` once PostgreSQL is running (see `infra/docker/docker-compose.yml`).
-3. Implement persistence layers in `@vanth/services` using Prisma repositories (points engine, wallet linking, Twitter tokens).
-4. Wire Discord commands to real services, replacing in-memory placeholders in `packages/bot`.
-5. Build out background schedulers for X ingestion, Solana sync, and quest settlement.
-6. Add unit tests for the points engine and idempotency flow per project rules.
+1. Run database migrations (pnpm --filter @vanth/services prisma migrate dev) to materialize recent schema updates.
+2. Wire the SolanaHolderSync scaffold to a real indexer provider and implement role application rules.
+3. Implement automated quest settlement (progress tracking and completion) using the quest service.
+4. Add scheduler jobs for periodic X ingestion, quest settlement, and Solana holder sync.
+5. Expand automated test coverage for configuration, multipliers, quests, and admin command surfaces.
+6. Document operational runbooks (command registration, job scheduling, env secrets) ahead of deployment.

@@ -15,3 +15,4 @@ export const commands = [
 
 export const commandMap: CommandMap = new Map(commands.map((command) => [command.data.name, command]));
 
+

@@ -6,6 +6,8 @@ import {
   PrismaWalletService,
   PrismaXIngestor,
   PrismaXOauthHandler,
+  QuestService,
+  SolanaHolderSync,
   StubXIngestor,
   StubXOauthHandler,
   XIngestor,
@@ -21,6 +23,8 @@ const pointsEngine = new PointsEngine({
   multiplierService,
   pointsService,
 });
+const questService = new QuestService();
+const holderSync = new SolanaHolderSync();
 
 const xOauthHandler: XOauthHandler = (() => {
   try {
@@ -45,6 +49,8 @@ const walletService = new PrismaWalletService();
 export interface BotContext {
   pointsEngine: PointsEngine;
   pointsService: PrismaPointsService;
+  questService: QuestService;
+  holderSync: SolanaHolderSync;
   xOauthHandler: XOauthHandler;
   xIngestor: XIngestor;
   walletService: PrismaWalletService;
@@ -57,6 +63,8 @@ export const getBotContext = (): BotContext => {
     cachedContext = {
       pointsEngine,
       pointsService,
+      questService,
+      holderSync,
       xOauthHandler,
       xIngestor,
       walletService,
